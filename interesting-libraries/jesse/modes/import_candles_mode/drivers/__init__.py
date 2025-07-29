@@ -19,6 +19,7 @@ from jesse.modes.import_candles_mode.drivers.Gate.GateUSDTPerpetual import GateU
 from jesse.modes.import_candles_mode.drivers.Gate.GateSpot import GateSpot
 from jesse.modes.import_candles_mode.drivers.Hyperliquid.HyperliquidPerpetual import HyperliquidPerpetual
 from jesse.modes.import_candles_mode.drivers.Hyperliquid.HyperliquidPerpetualTestnet import HyperliquidPerpetualTestnet
+from jesse.modes.import_candles_mode.drivers.Custom.CustomDataImport import CustomDataImport
 
 
 drivers = {
@@ -44,6 +45,8 @@ drivers = {
     exchanges.BINANCE_US_SPOT: BinanceUSSpot,
     exchanges.BYBIT_SPOT_TESTNET: BybitSpotTestnet,
     exchanges.BYBIT_SPOT: BybitSpot,
+    # Custom Data
+    'Custom': CustomDataImport,
 }
 
 
