@@ -1,0 +1,1 @@
+from indian_market_jesse.version import __version__

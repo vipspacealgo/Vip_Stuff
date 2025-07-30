@@ -2,7 +2,7 @@ from jesse.strategies import Strategy
 import jesse.indicators as ta
 from jesse import utils
 
-class TEMATrendFollowing(Strategy):
+class tema2(Strategy):
     @property
     def candles_4h(self):
         return self.get_candles(self.exchange, self.symbol, '4h')

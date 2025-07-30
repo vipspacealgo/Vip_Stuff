@@ -77,3 +77,33 @@ INFO:     127.0.0.1:64409 - "GET /exchange/api-keys HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64409 - "GET /notification/api-keys HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64409 - "GET /strategy/all HTTP/1.1" 200 OK
 INFO:     connection closed
+INFO:     ('127.0.0.1', 51295) - "WebSocket /ws?token=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" [accepted]
+INFO:     connection open
+[33mWebSocket 6055011120 disconnected[0m
+[33mRedis unsubscribed - no more active connections[0m
+[33m=> WebSocket 6055266784 connecting[0m
+INFO:     127.0.0.1:51291 - "POST /system/general-info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51291 - "POST /config/get HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51291 - "POST /system/active-workers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51291 - "GET /exchange/api-keys HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51291 - "GET /notification/api-keys HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51291 - "POST /exchange/supported-symbols HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51292 - "POST /candles/import HTTP/1.1" 202 Accepted
+/Users/vipusingh/Documents/Vip-Stuff/Github/my-jesse-bot/jesse-env/lib/python3.13/site-packages/jesse/__init__.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+[2025-07-29 22:44:54,172] [timeloop] [INFO] Starting Timeloop..
+[2025-07-29 22:44:54,172] [timeloop] [INFO] Registered job <function run.<locals>.handle_time at 0x12f1d6200>
+[2025-07-29 22:44:54,172] [timeloop] [INFO] Timeloop now started. Jobs will run based on the interval set
+INFO:     127.0.0.1:51357 - "POST /candles/cancel-import HTTP/1.1" 202 Accepted
+INFO:     connection closed
+INFO:     ('127.0.0.1', 51668) - "WebSocket /ws?token=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" [accepted]
+INFO:     connection open
+[33mWebSocket 6055266784 disconnected[0m
+[33mRedis unsubscribed - no more active connections[0m
+[33m=> WebSocket 6054884688 connecting[0m
+INFO:     127.0.0.1:51660 - "POST /system/general-info HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51660 - "POST /config/get HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51660 - "POST /system/active-workers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51660 - "GET /exchange/api-keys HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51660 - "GET /notification/api-keys HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51660 - "POST /exchange/supported-symbols HTTP/1.1" 200 OK

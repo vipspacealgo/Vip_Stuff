@@ -83,7 +83,7 @@ class tema(Strategy):
         qty = utils.risk_to_qty(self.available_margin, 3, entry_price, stop_loss_price, fee_rate=self.fee_rate)
         
         # Place the order
-        self.buy = qty*3, entry_price
+        self.buy = qty, entry_price
     
     def go_short(self):
         # Calculate entry, stop and position size
@@ -94,7 +94,7 @@ class tema(Strategy):
         qty = utils.risk_to_qty(self.available_margin, 3, entry_price, stop_loss_price, fee_rate=self.fee_rate)
         
         # Place the order
-        self.sell = qty*3, entry_price
+        self.sell = qty, entry_price
     
     def should_cancel_entry(self) -> bool:
         return True

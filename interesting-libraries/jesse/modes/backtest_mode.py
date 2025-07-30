@@ -344,12 +344,25 @@ def load_candles(start_date: int, finish_date: int) -> Tuple[dict, dict]:
             )
 
         # Check that the first trading candle covers the requested start date.
-        if trading_candle_arr[0][0] > start_date:
-            _handle_missing_candles(exchange, symbol, start_date)
+        # For Custom exchange, allow data to start within 24 hours of requested start date
+        # to accommodate different market hours and trading sessions
+        if exchange.lower() == 'custom':
+            max_allowed_gap = 24 * 60 * 60 * 1000  # 24 hours in milliseconds
+            if trading_candle_arr[0][0] > (start_date + max_allowed_gap):
+                _handle_missing_candles(exchange, symbol, start_date)
+        else:
+            if trading_candle_arr[0][0] > start_date:
+                _handle_missing_candles(exchange, symbol, start_date)
 
         # Check that the last trading candle covers the requested finish date.
-        if trading_candle_arr[-1][0] < (finish_date - 60_000):
-            _handle_missing_candles(exchange, symbol, start_date)
+        # For Custom exchange, allow more flexibility with end date
+        if exchange.lower() == 'custom':
+            max_allowed_gap = 24 * 60 * 60 * 1000  # 24 hours in milliseconds
+            if trading_candle_arr[-1][0] < (finish_date - max_allowed_gap):
+                _handle_missing_candles(exchange, symbol, start_date)
+        else:
+            if trading_candle_arr[-1][0] < (finish_date - 60_000):
+                _handle_missing_candles(exchange, symbol, start_date)
 
         # add trading candles
         trading_candles[jh.key(exchange, symbol)] = {
