@@ -19,8 +19,9 @@ class BacktestEngine:
     """
     
     def __init__(self, 
-                 strategy_class: Type[Strategy],
-                 symbol: str,
+                 strategy_class: Type[Strategy] = None,
+                 strategy_instance: Strategy = None,
+                 symbol: str = None,
                  exchange: str = 'NSE',
                  timeframe: str = '1m',
                  start_date: str = None,
@@ -30,7 +31,8 @@ class BacktestEngine:
         Initialize the backtest engine
         
         Args:
-            strategy_class: The strategy class to test
+            strategy_class: The strategy class to test (deprecated, use strategy_instance)
+            strategy_instance: Pre-initialized strategy instance
             symbol: Symbol to trade
             exchange: Exchange name (default: NSE)
             timeframe: Timeframe for trading
@@ -38,7 +40,6 @@ class BacktestEngine:
             finish_date: Finish date for backtest (YYYY-MM-DD)
             initial_capital: Initial capital in INR
         """
-        self.strategy_class = strategy_class
         self.symbol = symbol
         self.exchange = exchange
         self.timeframe = timeframe
@@ -47,8 +48,16 @@ class BacktestEngine:
         self.initial_capital = initial_capital
         
         # Initialize strategy instance
-        self.strategy = strategy_class()
-        self.strategy.symbol = symbol
+        if strategy_instance is not None:
+            self.strategy = strategy_instance
+        elif strategy_class is not None:
+            self.strategy = strategy_class()
+        else:
+            raise ValueError("Either strategy_class or strategy_instance must be provided")
+        
+        # Set strategy properties
+        if symbol:
+            self.strategy.symbol = symbol
         self.strategy.exchange = exchange
         self.strategy.timeframe = timeframe
         self.strategy.initial_capital = initial_capital

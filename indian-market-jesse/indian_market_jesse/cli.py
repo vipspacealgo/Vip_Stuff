@@ -13,7 +13,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from indian_market_jesse.services.backtest_engine import BacktestEngine
 from indian_market_jesse.strategies.ma_crossover import MovingAverageCrossover
 from indian_market_jesse.strategies.rsi_mean_reversion import RSIMeanReversion
+from indian_market_jesse.strategies.aggressive_mean_reversion import AggressiveMeanReversion
+from indian_market_jesse.strategies.nifty_futures_mean_reversion import NiftyFuturesMeanReversion
+from indian_market_jesse.strategies.futures_mean_reversion import FuturesMeanReversion
 from indian_market_jesse.services.data_importer import DataImporter
+from indian_market_jesse.models.instrument import InstrumentRegistry
 
 @click.group()
 def cli():
@@ -25,6 +29,8 @@ def cli():
               help='Strategy to run (default: ma_crossover)')
 @click.option('--symbol', default='NIFTY50', 
               help='Symbol to trade (default: NIFTY50)')
+@click.option('--instrument', '-i', default='NIFTY',
+              help='Instrument type for futures strategy (NIFTY, BANKNIFTY, FINNIFTY)')
 @click.option('--timeframe', '-t', default='1m', 
               help='Timeframe for trading (default: 1m)')
 @click.option('--start-date', '-sd', 
@@ -37,13 +43,16 @@ def cli():
               help='Path to data CSV file')
 @click.option('--save-results', '-sr', is_flag=True,
               help='Save results to CSV file')
-def backtest(strategy, symbol, timeframe, start_date, finish_date, capital, data_file, save_results):
+def backtest(strategy, symbol, instrument, timeframe, start_date, finish_date, capital, data_file, save_results):
     """Run a backtest with the specified parameters"""
     
     # Strategy mapping
     strategies = {
         'ma_crossover': MovingAverageCrossover,
-        'rsi_mean_reversion': RSIMeanReversion
+        'rsi_mean_reversion': RSIMeanReversion,
+        'aggressive_mean_reversion': AggressiveMeanReversion,
+        'nifty_futures_mean_reversion': NiftyFuturesMeanReversion,
+        'futures_mean_reversion': FuturesMeanReversion
     }
     
     if strategy not in strategies:
@@ -52,9 +61,15 @@ def backtest(strategy, symbol, timeframe, start_date, finish_date, capital, data
         return
     
     try:
+        # Initialize strategy with instrument if it's futures_mean_reversion
+        if strategy == 'futures_mean_reversion':
+            strategy_instance = strategies[strategy](instrument)
+        else:
+            strategy_instance = strategies[strategy]()
+        
         # Initialize backtest engine
         engine = BacktestEngine(
-            strategy_class=strategies[strategy],
+            strategy_instance=strategy_instance,
             symbol=symbol,
             timeframe=timeframe,
             start_date=start_date,
@@ -116,13 +131,35 @@ def strategies():
     """List available strategies"""
     strategies_list = [
         'ma_crossover - Moving Average Crossover Strategy',
-        'rsi_mean_reversion - RSI Mean Reversion Strategy'
+        'rsi_mean_reversion - RSI Mean Reversion Strategy',
+        'aggressive_mean_reversion - Aggressive RSI Mean Reversion Strategy (15m optimized)',
+        'nifty_futures_mean_reversion - NIFTY Futures Mean Reversion (Proper lot sizing & margin)',
+        'futures_mean_reversion - Universal Futures Strategy (NIFTY, BANKNIFTY, FINNIFTY)'
     ]
     
     click.echo("Available Strategies:")
     click.echo("-" * 30)
     for strategy in strategies_list:
         click.echo(f"  {strategy}")
+
+@cli.command()
+def instruments():
+    """List available instrument configurations"""
+    instruments = InstrumentRegistry.list_instruments()
+    
+    click.echo("Available Instruments:")
+    click.echo("-" * 50)
+    click.echo(f"{'Symbol':<12} {'Type':<8} {'Lot Size':<8} {'Margin':<8} {'Leverage':<8}")
+    click.echo("-" * 50)
+    
+    for symbol, instrument in instruments.items():
+        leverage = f"{instrument.max_leverage:.1f}x"
+        margin = f"{instrument.margin_rate:.1%}"
+        click.echo(f"{symbol:<12} {instrument.instrument_type.value:<8} "
+                  f"{instrument.lot_size:<8} {margin:<8} {leverage:<8}")
+    
+    click.echo("-" * 50)
+    click.echo("Usage: --instrument NIFTY (for futures_mean_reversion strategy)")
 
 @cli.command()
 @click.option('--name', '-n', required=True,
